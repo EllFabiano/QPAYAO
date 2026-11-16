@@ -1,0 +1,74 @@
+// ================================================
+// QPAY AO — Prisma Schema (PostgreSQL)
+// ================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String   @unique
+  pin           String
+  role          String   @default("user") // "user" | "agent" | "admin"
+  nif           String?  @unique
+  balance       Float    @default(0.0)
+  isBlocked     Boolean  @default(false)
+  fixedQrCode   String?  @db.Text
+  avatar        String?  @db.Text
+  faceIdEnabled Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sentTransactions     Transaction[]    @relation("FromUser")
+  receivedTransactions Transaction[]    @relation("ToUser")
+  pendingDeposits      PendingDeposit[]
+
+  @@index([phone])
+  @@index([role])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  type        String   // "deposit" | "withdrawal" | "transfer_in" | "transfer_out" | "qr_payment_in" | "qr_payment_out"
+  amount      Float
+  description String
+  note        String?
+  status      String   @default("completed")
+  timestamp   DateTime @default(now())
+
+  fromUserId  String?
+  toUserId    String?
+
+  fromUser    User?    @relation("FromUser", fields: [fromUserId], references: [id], onDelete: SetNull)
+  toUser      User?    @relation("ToUser", fields: [toUserId], references: [id], onDelete: SetNull)
+
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([timestamp])
+}
+
+model PendingDeposit {
+  id        String   @id @default(uuid())
+  userId    String
+  userName  String
+  userPhone String
+  amount    Float
+  bank      String
+  reference String
+  notes     String?
+  status    String   @default("pending") // "pending" | "approved" | "rejected"
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([userId])
+}
+

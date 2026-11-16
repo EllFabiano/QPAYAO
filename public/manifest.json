@@ -1,0 +1,50 @@
+{
+  "name": "QPAY AO — Pagamentos Digitais",
+  "short_name": "QPAY AO",
+  "description": "Sistema de pagamentos digitais por QR Code para pequenos comerciantes e vendedores informais da província do Uíge, Angola.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080C18",
+  "theme_color": "#00F2FE",
+  "orientation": "portrait-primary",
+  "lang": "pt-AO",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "O Meu QR Code",
+      "short_name": "QR Code",
+      "description": "Ver e partilhar o meu QR Code",
+      "url": "./qrcode.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Transferir",
+      "short_name": "Transferir",
+      "description": "Enviar dinheiro a outro utilizador",
+      "url": "./transferir.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pagar QR",
+      "short_name": "Pagar",
+      "description": "Escanear QR Code e pagar",
+      "url": "./scanner.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

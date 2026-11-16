@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>QPAY AO – Gerar Ícones PNG</title>
+<style>body{font-family:sans-serif;padding:20px;background:#080C18;color:white}</style>
+</head>
+<body>
+<h2>Gerador de Ícones QPAY AO</h2>
+<p>Este script converte o SVG em PNGs para a PWA.</p>
+<canvas id="c192" width="192" height="192" style="display:none"></canvas>
+<canvas id="c512" width="512" height="512" style="display:none"></canvas>
+<div id="output"></div>
+<script>
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="SIZE" height="SIZE">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#009E6A"/>
+      <stop offset="100%" stop-color="#00F5A8"/>
+    </linearGradient>
+  </defs>
+  <rect width="SIZE" height="SIZE" rx="RADIUS" fill="url(#g)"/>
+  <g transform="scale(SCALE)">
+    <rect x="40" y="40" width="44" height="44" rx="6" fill="white"/>
+    <rect x="48" y="48" width="28" height="28" rx="3" fill="url(#g)"/>
+    <rect x="108" y="40" width="44" height="44" rx="6" fill="white"/>
+    <rect x="116" y="48" width="28" height="28" rx="3" fill="url(#g)"/>
+    <rect x="40" y="108" width="44" height="44" rx="6" fill="white"/>
+    <rect x="48" y="116" width="28" height="28" rx="3" fill="url(#g)"/>
+    <rect x="108" y="108" width="13" height="13" rx="3" fill="white"/>
+    <rect x="108" y="126" width="13" height="13" rx="3" fill="white"/>
+    <rect x="108" y="139" width="26" height="13" rx="3" fill="white"/>
+    <rect x="126" y="108" width="13" height="26" rx="3" fill="white"/>
+    <rect x="139" y="126" width="13" height="26" rx="3" fill="white"/>
+  </g>
+</svg>`;
+
+function genIcon(size) {
+  const scale = size / 192;
+  const radius = Math.round(42 * scale);
+  const svg = svgContent
+    .replace(/SIZE/g, size)
+    .replace('RADIUS', radius)
+    .replace('SCALE', scale);
+  
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `icon-${size}.png`;
+    a.textContent = `⬇ Baixar icon-${size}.png`;
+    a.style = 'display:block;margin:10px 0;color:#00D68F;font-size:16px';
+    document.getElementById('output').appendChild(a);
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
+window.onload = () => {
+  genIcon(192);
+  genIcon(512);
+  document.getElementById('output').insertAdjacentHTML('afterbegin','<p style="color:#94A3B8">Clique nos links para baixar os ícones e guarde-os na pasta <code style="color:#00D68F">assets/</code>:</p>');
+};
+</script>
+</body>
+</html>
